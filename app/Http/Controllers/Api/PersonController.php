@@ -38,4 +38,14 @@ class PersonController extends Controller
 
         return $person;
     }
+
+    public function tree()
+    {
+        $root = Person::whereNull('parent_id')
+            ->with('childrenRecursive')
+            ->first();
+
+        return response()->json($root);
+    }
+
 }

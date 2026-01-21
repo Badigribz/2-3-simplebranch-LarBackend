@@ -22,4 +22,9 @@ class Person extends Model
     {
         return $this->hasMany(Person::class, 'parent_id');
     }
+
+    public function childrenRecursive()
+    {
+        return $this->children()->with('childrenRecursive');
+    }
 }
