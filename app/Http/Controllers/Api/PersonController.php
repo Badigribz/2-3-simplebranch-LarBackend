@@ -47,5 +47,13 @@ class PersonController extends Controller
 
         return response()->json($root);
     }
+    // DELETE person (and all descendants via cascade)
+    public function destroy(Person $person)
+    {
+        $person->delete();
 
+        return response()->json([
+            'message' => 'Person and descendants deleted'
+        ]);
+    }
 }
