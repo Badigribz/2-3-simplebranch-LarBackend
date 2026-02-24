@@ -56,4 +56,8 @@ class PersonController extends Controller
             'message' => 'Person and descendants deleted'
         ]);
     }
+        public function show(Person $person)
+    {
+        return response()->json($person);
+    }
 }

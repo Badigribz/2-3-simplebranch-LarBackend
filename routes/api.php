@@ -13,3 +13,4 @@ Route::post('/people', [PersonController::class, 'store']);
 Route::patch('/people/{person}', [PersonController::class, 'update']);
 Route::get('/tree', [PersonController::class, 'tree']);
 Route::delete('/people/{person}', [PersonController::class, 'destroy']);
+Route::get('/people/{person}', [PersonController::class, 'show']);

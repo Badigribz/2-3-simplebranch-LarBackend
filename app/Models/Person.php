@@ -11,6 +11,9 @@ class Person extends Model
         'parent_id',
         'bio',
         'photo_path',
+        'birth_date',      
+        'birth_place',
+        'death_date',
     ];
 
     public function parent()
