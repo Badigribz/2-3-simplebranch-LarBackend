@@ -11,7 +11,7 @@ class Person extends Model
         'parent_id',
         'bio',
         'photo_path',
-        'birth_date',      
+        'birth_date',
         'birth_place',
         'death_date',
     ];
@@ -29,5 +29,10 @@ class Person extends Model
     public function childrenRecursive()
     {
         return $this->children()->with('childrenRecursive');
+    }
+    
+        public function photos()
+    {
+        return $this->hasMany(Photo::class)->orderBy('order');
     }
 }
