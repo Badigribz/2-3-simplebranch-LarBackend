@@ -15,6 +15,12 @@ class PersonController extends Controller
         return Person::all();
     }
 
+    // GET single person
+    public function show(Person $person)
+    {
+        return response()->json($person);
+    }
+
     // POST add person
     public function store(Request $request)
     {
@@ -23,11 +29,23 @@ class PersonController extends Controller
             'parent_id' => 'nullable|exists:people,id',
         ]);
 
+        $user = auth()->user();
+
+        // If user is editor, enforce they can only add children to themselves
+        if ($user->isEditor() && !$user->isAdmin()) {
+            if ($data['parent_id'] !== $user->person_id) {
+                abort(403, 'Editors can only add children to their own profile');
+            }
+        }
+
         return Person::create($data);
     }
-     // PATCH update person (for editing profiles)
+
+    // PATCH update person
     public function update(Request $request, Person $person)
     {
+        // Policy already checked via middleware
+
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
             'bio' => 'nullable|string',
@@ -42,9 +60,11 @@ class PersonController extends Controller
         return $person;
     }
 
-     // POST upload photo — NEW METHOD
+    // POST upload profile photo
     public function uploadPhoto(Request $request, Person $person)
     {
+        // Policy already checked via middleware
+
         $request->validate([
             'photo' => 'required|image|max:5120', // 5MB max
         ]);
@@ -54,7 +74,7 @@ class PersonController extends Controller
             Storage::disk('public')->delete($person->photo_path);
         }
 
-        // Store new photo in storage/app/public/photos
+        // Store new photo
         $path = $request->file('photo')->store('photos', 'public');
 
         // Update person record
@@ -75,12 +95,21 @@ class PersonController extends Controller
 
         return response()->json($root);
     }
-    // DELETE person (and all descendants via cascade)
+
+    // DELETE person
     public function destroy(Person $person)
     {
+        // Policy already checked via middleware
+
         // Delete photo if exists
         if ($person->photo_path) {
             Storage::disk('public')->delete($person->photo_path);
+        }
+
+        // Delete all photos in gallery
+        foreach ($person->photos as $photo) {
+            Storage::disk('public')->delete($photo->path);
+            $photo->delete();
         }
 
         $person->delete();
@@ -88,10 +117,5 @@ class PersonController extends Controller
         return response()->json([
             'message' => 'Person and descendants deleted'
         ]);
-    }
-
-    public function show(Person $person)
-    {
-        return response()->json($person);
     }
 }

@@ -30,9 +30,14 @@ class Person extends Model
     {
         return $this->children()->with('childrenRecursive');
     }
-    
+
         public function photos()
     {
         return $this->hasMany(Photo::class)->orderBy('order');
+    }
+
+        public function user()
+    {
+        return $this->hasOne(User::class);
     }
 }

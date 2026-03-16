@@ -16,12 +16,13 @@ return [
     */
 
     // 'paths' => ['*'],
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'login', 'logout', 'register', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
     // 'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:3000')],
-    'allowed_origins' => ['*'],
+    //'allowed_origins' => ['*'],
+    'allowed_origins' => ['http://127.0.0.1:1234'],
 
     'allowed_origins_patterns' => [],
 
@@ -32,6 +33,6 @@ return [
     'max_age' => 0,
 
     // 'supports_credentials' => true,
-    'supports_credentials' => false,
+    'supports_credentials' => true,
 
 ];

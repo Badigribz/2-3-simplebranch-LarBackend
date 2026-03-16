@@ -12,8 +12,21 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // ─────────────────────────────────────────────
+        // API MIDDLEWARE - Order is CRITICAL
+        // ─────────────────────────────────────────────
+        $middleware->api(prepend: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            \Illuminate\Session\Middleware\StartSession::class,  // ← Moved here!
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,  // ← Added
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        ]);
+
+        $middleware->alias([
+            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
+
