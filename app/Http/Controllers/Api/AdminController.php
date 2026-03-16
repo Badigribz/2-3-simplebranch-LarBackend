@@ -13,15 +13,6 @@ class AdminController extends Controller
     /**
      * Constructor - ensure only admins can access
      */
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (!auth()->user() || !auth()->user()->isAdmin()) {
-                abort(403, 'Admin access required');
-            }
-            return $next($request);
-        });
-    }
 
     /**
      * Get all pending user requests

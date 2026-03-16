@@ -17,16 +17,19 @@ return Application::configure(basePath: dirname(__DIR__))
         // ─────────────────────────────────────────────
         $middleware->api(prepend: [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Session\Middleware\StartSession::class,  // ← Moved here!
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,  // ← Added
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
         ]);
 
+        // ─────────────────────────────────────────────
+        // MIDDLEWARE ALIASES
+        // ─────────────────────────────────────────────
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+            'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
-
