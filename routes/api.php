@@ -22,6 +22,11 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 // PROTECTED ROUTES (authentication required)
 // ═══════════════════════════════════════════════════════════════
 
+// PUBLIC TREE VIEWING (anyone can see the tree)
+Route::get('/tree', [PersonController::class, 'tree']);
+Route::get('/people', [PersonController::class, 'index']);
+Route::get('/people/{person}', [PersonController::class, 'show']);
+
 //Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 Route::middleware(['auth:sanctum'])->group(function () {
     // ── Auth routes ──
@@ -29,11 +34,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user()->load('person');
     });
-
-    // ── Person routes (all authenticated users can view) ──
-    Route::get('/people', [PersonController::class, 'index']);
-    Route::get('/people/{person}', [PersonController::class, 'show']);
-    Route::get('/tree', [PersonController::class, 'tree']);
 
     // ── Person mutations (permission-based) ──
     Route::post('/people', [PersonController::class, 'store'])
@@ -57,7 +57,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/photos/{photo}', [PhotoController::class, 'destroy']);
 
     Route::prefix('admin')->middleware('admin')->group(function () {
-        
+
         // All your admin routes
 
         // User management
